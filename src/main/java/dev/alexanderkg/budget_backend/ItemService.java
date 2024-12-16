@@ -20,7 +20,7 @@ public class ItemService {
     }
 
     public Item readItem(long id) {
-        return itemRepository.findById(id).orElse(null);
+        return itemRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(String.format("Item: %d not found.", id)));
     }
 
     public List<ItemDto> readAllItems() {
