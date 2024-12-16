@@ -1,11 +1,12 @@
 package dev.alexanderkg.budget_backend;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ItemController {
@@ -24,5 +25,17 @@ public class ItemController {
         item.setCategory(itemDto.category());
         var itemId = itemService.saveItem(item);
         return ResponseEntity.created(URI.create(String.format("/items/%s", itemId))).build();
+    }
+
+    @GetMapping("items/{id}")
+    public ResponseEntity<ItemDto> getItem(@PathVariable long id) {
+        var item = itemService.readItem(id);
+        var itemDto = new ItemDto(item.getName(), item.getPrice(), item.getCategory());
+        return ResponseEntity.ok(itemDto);
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<List<ItemDto>> getAllItems() {
+        return ResponseEntity.ok(itemService.readAllItems());
     }
 }
